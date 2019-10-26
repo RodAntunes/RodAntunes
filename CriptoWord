@@ -1,0 +1,113 @@
+#include<stdio.h>
+#include<ctype.h>
+int MatrizC[3][3]={1, 0, 1, 1, 1, 1, 0, 2, -1}, MatrizIC[3][3]={3, -2, 1, -1, 1, 0, -2, 2, -1};
+char Tabela[27]={' ', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 
+'N','O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'X', 'W', 'Y', 'Z'};
+
+int MultiplicaMatriz(int M1[3][3], int M2[3][2], int MR[3][2]){
+	int X, Y, L;
+	for(X=0; X<3; X++)
+	{
+		for(Y=0; Y<2; Y++)
+		{
+			for(L=0; L<3; L++)
+			{
+				MR[X][Y] = MR[X][Y] + M1[X][L] * M2[L][Y];				
+			}
+		}
+	}
+	
+	return MR[3][2];
+}
+
+void ImprimeMatriz(int M[3][2]){
+	int X,Y;
+	for(X=0; X<3; X++)
+	{
+		for(Y=0; Y<2; Y++)
+		{
+			printf("%2.0d ", M[X][Y]);
+		}
+		printf("\n");
+	}
+}
+
+main(){
+	char Palavra[6];
+	int MatrizM[3][2]={0.}, MatrizMC[3][2]={0.}, X, Y, L, CompC=0, PesquisaTab=0, Menu; 
+	
+	printf("(1) Criptogragar Mensagem\n(2) Decriptografar Mensagem\n Escolha: ");
+	scanf("%d", &Menu);
+	
+	switch(Menu)
+	{
+		case 1: 
+		{
+			printf("Entre com Palavra de 6 Digitos: ");
+			scanf("%s", Palavra);
+		
+			for(X=0; X<6; X++)
+			{
+				Palavra[X] = toupper(Palavra[X]);
+			}
+		
+			printf("-- Palavra lida ---\n");
+			printf(" %s\n", Palavra);
+			
+			for(Y=0; Y<2; Y++)
+			{
+				for(X=0; X<3; X++)
+				{
+					do{
+						if(Palavra[CompC] == Tabela[PesquisaTab])
+							{
+								MatrizM[X][Y] = PesquisaTab;
+								break;
+							}
+						PesquisaTab++;
+					}while(PesquisaTab<27);
+					CompC++;
+					PesquisaTab = 0;
+				}
+			}
+			
+			MultiplicaMatriz(MatrizC, MatrizM, MatrizMC);			
+
+			printf("-Mensagem Codificada-\n");
+			ImprimeMatriz(MatrizM);
+			
+			printf("-Mensagem Criptografada-\n");
+			ImprimeMatriz(MatrizMC);
+		}
+		break;
+		case 2:
+		{
+			printf("Entre com a Matriz MC gerada:\n");
+			for(X=0; X<3; X++)
+			{
+				for(Y=0; Y<2; Y++)
+				{
+					printf("[%d][%d]: ", X, Y);
+					scanf("%d",&MatrizMC[X][Y]);
+				}
+			}
+
+			MultiplicaMatriz(MatrizIC, MatrizMC, MatrizM);
+			
+			printf("-Mensagem Criptografada-\n");
+			ImprimeMatriz(MatrizMC);
+			
+			printf("-Mensagem Codificada-\n");
+			ImprimeMatriz(MatrizM);
+		
+			printf("-Mensagem Original-\n");
+			for(Y=0; Y<2; Y++)
+			{
+				for(X=0; X<3; X++)
+				{
+					printf("%c", Tabela[MatrizM[X][Y]]);
+				}
+			}
+		}
+	};
+}
